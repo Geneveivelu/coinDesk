@@ -17,7 +17,6 @@ public class CoinDeskCurrencyData {
 
   public String description;
 
-  @JsonProperty("rate_float")
   @SerializedName("rate_float")
   public BigDecimal rateFloat;
 

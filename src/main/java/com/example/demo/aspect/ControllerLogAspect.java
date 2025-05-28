@@ -30,7 +30,6 @@ public class ControllerLogAspect {
 
   @Pointcut("within(@org.springframework.web.bind.annotation.RestController *)")
   public void controllerAspect() {
-
   }
 
   @Around("controllerAspect()")
@@ -40,7 +39,9 @@ public class ControllerLogAspect {
     ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
     HttpServletRequest request = requestAttributes.getRequest();
     logger.info("{} Request URL: {}", request.getMethod(), request.getRequestURI());
-    logger.info("Request body: {}", joinPoint.getArgs());
+    if (joinPoint.getArgs().length > 0) {
+      logger.info("Request body: {}", joinPoint.getArgs());
+    }
 
     Object result;
     try {
@@ -48,7 +49,7 @@ public class ControllerLogAspect {
       logger.info("Response body: {}", JsonUtils.toJson(result));
       return result;
     } catch (Exception e) {
-      logger.error("Exception happened: ", e);
+      logger.info("Exception happened: {}", e.getMessage());
       return ResponseEntity.status(HttpStatus.OK.value())
           .contentType(MediaType.APPLICATION_JSON)
           .body(ResponseObj.newInstance()

@@ -7,15 +7,12 @@ import lombok.Data;
 @Data
 public class CoinDeskBpiData {
 
-  @JsonProperty("USD")
   @SerializedName("USD")
   private CoinDeskCurrencyData usd;
 
-  @JsonProperty("GBP")
   @SerializedName("GBP")
   private CoinDeskCurrencyData gbp;
 
-  @JsonProperty("EUR")
   @SerializedName("EUR")
   private CoinDeskCurrencyData eur;
 
