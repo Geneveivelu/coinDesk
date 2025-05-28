@@ -13,6 +13,8 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -47,11 +49,11 @@ public class ControllerLogAspect {
       return result;
     } catch (Exception e) {
       logger.error("Exception happened: ", e);
-      result = e.getMessage();
-//      if (e instanceof HttpRequestException) {
-//
-//      }
-      return result;
+      return ResponseEntity.status(HttpStatus.OK.value())
+          .contentType(MediaType.APPLICATION_JSON)
+          .body(ResponseObj.newInstance()
+              .initFailResponse()
+              .setResultMessage(e.getMessage()));
     } finally {
       long endTime = System.currentTimeMillis();
       long durationTime = endTime - startTime;

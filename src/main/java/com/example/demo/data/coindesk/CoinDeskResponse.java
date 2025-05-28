@@ -2,8 +2,6 @@ package com.example.demo.data.coindesk;
 
 import lombok.Data;
 
-import java.util.List;
-
 @Data
 public class CoinDeskResponse {
 
