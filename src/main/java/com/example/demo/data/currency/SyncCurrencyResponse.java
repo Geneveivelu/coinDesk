@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 public class SyncCurrencyResponse {
 
-  @JsonFormat
+  @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss")
   private LocalDateTime syncTime;
 
   private List<CurrencyInfo> currencyInfoList;

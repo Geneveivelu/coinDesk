@@ -1,6 +1,7 @@
 package com.example.demo.data.coindesk;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -17,6 +18,7 @@ public class CoinDeskCurrencyData {
   public String description;
 
   @JsonProperty("rate_float")
+  @SerializedName("rate_float")
   public BigDecimal rateFloat;
 
 }

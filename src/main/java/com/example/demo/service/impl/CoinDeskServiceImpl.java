@@ -5,7 +5,6 @@ import com.example.demo.data.coindesk.CoinDeskBpiData;
 import com.example.demo.data.coindesk.CoinDeskCurrencyData;
 import com.example.demo.data.coindesk.CoinDeskResponse;
 import com.example.demo.data.ResponseObj;
-import com.example.demo.data.coindesk.CoinDeskTimeData;
 import com.example.demo.data.currency.CurrencyInfo;
 import com.example.demo.data.currency.SyncCurrencyResponse;
 import com.example.demo.entity.BpiCurrency;
@@ -20,15 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.net.http.HttpResponse;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 @Service
 public class CoinDeskServiceImpl implements CoinDeskService {
@@ -59,9 +53,9 @@ public class CoinDeskServiceImpl implements CoinDeskService {
       SyncCurrencyResponse syncCurrencyResponse = new SyncCurrencyResponse();
       List<CurrencyInfo> currencyInfoList = new ArrayList<>();
       CoinDeskBpiData bpiData = coinDeskResponse.getBpi();
-      currencyInfoList.add(setCurrencyInfo(bpiData.getEUR()));
-      currencyInfoList.add(setCurrencyInfo(bpiData.getGBP()));
-      currencyInfoList.add(setCurrencyInfo(bpiData.getUSD()));
+      currencyInfoList.add(setCurrencyInfo(bpiData.getEur()));
+      currencyInfoList.add(setCurrencyInfo(bpiData.getGbp()));
+      currencyInfoList.add(setCurrencyInfo(bpiData.getUsd()));
 
       syncCurrencyResponse.setSyncTime(LocalDateTime.now());
       syncCurrencyResponse.setCurrencyInfoList(currencyInfoList);
@@ -74,17 +68,21 @@ public class CoinDeskServiceImpl implements CoinDeskService {
 
   @Override
   public CoinDeskResponse requestCoinDesk() throws HttpRequestException {
+    CoinDeskResponse response = new CoinDeskResponse();
     if (config.useMock) {
-      return getMockCoinDeskResponse();
+      response = getMockCoinDeskResponse();
+      logger.info("Get mock coinDesk response, {}", JsonUtils.toJson(response));
     } else {
       HttpResponse<String> responseBody = HttpClientUtils.get(config.coinDeskApiUrl);
       if (responseBody.statusCode() == HttpStatus.OK.value()) {
-        return JsonUtils.fromJson(responseBody.body(), CoinDeskResponse.class);
+        logger.info("Request coindesk Api response: {}", responseBody.body());
+        response = JsonUtils.fromJson(responseBody.body(), CoinDeskResponse.class);
       } else {
         logger.error("Request coinDesk failed, statusCode: {}", responseBody.statusCode());
         throw new HttpRequestException("Request coinDesk fail");
       }
     }
+    return response;
   }
 
   private CurrencyInfo setCurrencyInfo(CoinDeskCurrencyData currencyData) {
