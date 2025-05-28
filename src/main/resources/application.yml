@@ -1,0 +1,28 @@
+server:
+  port: 8080
+  useMock: true
+
+spring:
+  application:
+    name: demo
+  datasource:
+    h2:
+      url: jdbc:h2:tcp://localhost/~/testdb
+      username: admin
+      password: 1234Asdf
+      driver-class-name: org.h2.Driver
+      console:
+        enabled: true
+      hikari:
+        auto-commit: true
+        pool-name: HikariH2DriverPool
+        maximum-pool-size: 10
+        idle-time: 30000
+        max-lifetime: 600000
+        connection-test-query: SELECT 1
+        connection-timeout: 30000
+
+withdrawCron: "*/10 * * * * *"
+
+url:
+  coin-desk-api: https://api.coindesk.com/v1/bpi/currentprice.json
